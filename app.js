@@ -2,6 +2,7 @@ var studentList = $(".student-list");
 var studentItem = $(".student-item");
 var onePageItem = 10;
 var lastValue = ""; // Store the value from input side
+
 var message = $("<li class='message'>Sorry, no results matched</li>");// If no results matched, get the hint message
 studentList.append(message); // Hide the message at start
 message.hide();
@@ -9,17 +10,17 @@ message.hide();
 // Initialization when page loded
 
 function initilization(totalItem) {
-  console.log("initialize...")
+  console.log("initialize...");
   // Calculate the number page and pagination button
   var pageNumber = Math.ceil(totalItem / onePageItem);
-  
+
   // Add pagination button according to page number
   var $pagination = $("<div Class='pagination'></div>");
   for( var i = 1; i < pageNumber + 1; i++) {
       $pagination.append("<li><a>" + i + "</a></li>");
   }
   studentList.append($pagination);
-  
+
   $(".pagination li:first a").addClass("active"); // Set li first item anchor with class active
   $(".pagination a").on("click", anchorEventHandler); // Bind click event with anchor
 }
@@ -33,8 +34,8 @@ function tenPerPage(item) {
   		$(".block").eq(i).hide();
   	}
   } else { //construct initial page
-  	for(var i =10; i < item; i++) {
-  	    $(".student-item").eq(i).hide();
+  	for(var j =10; j < item; j++) {
+  	    $(".student-item").eq(j).hide();
     }
    }
 }
@@ -43,7 +44,7 @@ function tenPerPage(item) {
 
 function anchorEventHandler() {
 	console.log("page event handler");
-	$(this).addClass("active"); // Add class "active" when click the anchor 
+	$(this).addClass("active"); // Add class "active" when click the anchor
 	$(this).parent().siblings().children().removeClass("active"); // Remove siblings class when click the anchor
 	var $currentPage = $(this).text(); // Get current page number
 	getCorrectPage($currentPage);
@@ -59,7 +60,7 @@ function getCorrectPage(currentPage) {
     if(studentItem.hasClass("block")) {
     	$(".block").hide().slice(start, end).show(800, "linear");// Get correct page for filter item list
 
-        
+
     } else {
     	studentItem.hide().slice(start, end).show(800, "linear"); // Get correct page for initial item list
     }
@@ -74,20 +75,19 @@ function addSearchButton() {
 
     $(".student-search button").click(searchFilter);
     $(".student-search input").keyup(searchFilter);
-  
+
 }
 
 // When click search button, filter the results
 
 function searchFilter(){
     console.log("Search function worked...");
-    
+
     var matchItem = 0; // Calculate the matched item number
     var noMatchItem = 0; //Calculate the unmatched item number
     var names = $('.student-list li h3');
-    var emails = $('.student-list li .email');
-    inputValue = $(".student-search input").val().toLowerCase(); // Get the value of input
-    clearFunction(); // If last input value doesn't equal to current input value, clear class 'block'
+    var inputValue = $(".student-search input").val().toLowerCase(); // Get the value of input
+    clearFunction(inputValue); // If last input value doesn't equal to current input value, clear class 'block'
 
     for(var i = 0; i < studentItem.length; i++){
         var position = $('.student-list li .email').eq(i).text().indexOf('@');
@@ -125,16 +125,16 @@ function searchFilter(){
     }
     // If user input is empty, display original page and remove class 'block'
     if(inputValue.length === 0){
-        $(".student-item:nth-of-type(n+11)").hide(); 
+        $(".student-item:nth-of-type(n+11)").hide();
         studentItem.removeClass("block");
     }
-    
+
 
 }
 
 // Construct clear function
-function clearFunction() {
-	
+function clearFunction(inputValue) {
+
 	if(lastValue !== inputValue) {
 		studentItem.removeClass("block");
 		lastValue = inputValue;
